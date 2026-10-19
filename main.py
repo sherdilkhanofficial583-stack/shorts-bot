@@ -460,4 +460,4 @@ def main() -> int:
     log.info("Topics: %s", topics)
     jobs = [("short", topics[0]), ("short", topics[1]), ("short", topics[2]),
             ("long", topics[3]), ("tiktok", topics[4]), ("tiktok", topics[5])]
-    stamp = datetime.now(timezon
+    stamp = datetime.now(timezon.utc)
