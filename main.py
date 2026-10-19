@@ -36,7 +36,7 @@ log = logging.getLogger("bot")
 # --------------------------------------------------------------------------- #
 # Config
 # --------------------------------------------------------------------------- #
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
 VOICE = os.getenv("TTS_VOICE", "en-US-GuyNeural")
 GRAPH = os.getenv("META_GRAPH_VERSION", "v24.0")
 TIKTOK_PRIVACY = os.getenv("TIKTOK_PRIVACY_LEVEL", "SELF_ONLY")  # PUBLIC_TO_EVERYONE after TikTok audit
