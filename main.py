@@ -460,4 +460,34 @@ def main() -> int:
     log.info("Topics: %s", topics)
     jobs = [("short", topics[0]), ("short", topics[1]), ("short", topics[2]),
             ("long", topics[3]), ("tiktok", topics[4]), ("tiktok", topics[5])]
-    stamp = datetime.now(timezon.utc)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+
+    for idx, (kind, topic) in enumerate(jobs):
+        name = f"{kind}_{idx}_{stamp}"
+        log.info("Generating script for %s: %s", name, topic)
+        try:
+            script = gen_script(kind, topic)
+            video_path = build_video(kind, script, name)
+        except Exception as e:
+            log.error("Failed building video %s: %s", name, e)
+            continue
+
+        results = []
+        if kind == "short":
+            safe_upload(results, "YouTube Short", "youtube", ("YOUTUBE_CREDENTIALS",), upload_youtube, video_path, script, True)
+            safe_upload(results, "Facebook Reel", "facebook", ("META_ACCESS_TOKEN", "PAGE_ID"), upload_facebook_reel, video_path, script)
+            safe_upload(results, "Instagram Reel", "instagram", ("META_ACCESS_TOKEN", "PAGE_ID"), upload_instagram_reel, video_path, script)
+        elif kind == "long":
+            safe_upload(results, "YouTube Long", "youtube", ("YOUTUBE_CREDENTIALS",), upload_youtube, video_path, script, False)
+            safe_upload(results, "Facebook Long", "facebook", ("META_ACCESS_TOKEN", "PAGE_ID"), upload_facebook_long, video_path, script)
+        elif kind == "tiktok":
+            safe_upload(results, "TikTok", "tiktok", ("TIKTOK_ACCESS_TOKEN",), upload_tiktok, video_path, script)
+
+        log.info("Upload results for %s: %s", name, results)
+
+    log.info("All jobs completed successfully.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
